@@ -59,18 +59,18 @@ local function createGui()
 	if screenGui then screenGui:Destroy() end
 
 	screenGui = Instance.new("ScreenGui")
-	screenGui.Name = "OPFlyGUI"
+	screenGui.Name = "FlyGUI_LunaStyle"
 	screenGui.ResetOnSpawn = false
 	screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 	mainFrame = Instance.new("Frame", screenGui)
-	mainFrame.Size = UDim2.new(0,250,0,160)
-	mainFrame.Position = UDim2.new(0.5,-125,0.7,0)
+	mainFrame.Size = UDim2.new(0, 280, 0, 180)
+	mainFrame.Position = UDim2.new(0.5,0,0.5,0)
 	mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
-	mainFrame.Active = true
-	mainFrame.Draggable = true
+	mainFrame.BackgroundColor3 = Color3.fromRGB(20,20,25)
+	mainFrame.BorderSizePixel = 0
 	local uiCorner = Instance.new("UICorner", mainFrame)
-	uiCorner.CornerRadius = UDim.new(0,10)
+	uiCorner.CornerRadius = UDim.new(0,12)
 
 	local gradient = Instance.new("UIGradient", mainFrame)
 	gradient.Color = ColorSequence.new({
@@ -83,20 +83,21 @@ local function createGui()
 	local title = Instance.new("TextLabel", mainFrame)
 	title.Text = "OP Fly"
 	title.Size = UDim2.new(1,0,0,30)
+	title.Position = UDim2.new(0,0,0,0)
 	title.BackgroundTransparency = 1
-	title.TextColor3 = Color3.fromRGB(255,255,255)
+	title.TextColor3 = Color3.fromRGB(240,240,240)
 	title.TextScaled = true
 	title.Font = Enum.Font.GothamBold
 
 	closeButton = Instance.new("TextButton", mainFrame)
 	closeButton.Text = "X"
-	closeButton.Size = UDim2.new(0.2, 0, 0, 25)
-	closeButton.Position = UDim2.new(0.8, 0, 0, 0)
-	closeButton.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
-	closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	closeButton.Size = UDim2.new(0,30,0,30)
+	closeButton.Position = UDim2.new(1,-35,0,5)
+	closeButton.BackgroundColor3 = Color3.fromRGB(200,50,50)
+	closeButton.TextColor3 = Color3.fromRGB(255,255,255)
 	closeButton.Font = Enum.Font.GothamBold
 	closeButton.TextScaled = true
-	Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0, 8)
+	Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0,6)
 	closeButton.MouseButton1Click:Connect(function()
 		stopFly()
 		screenGui:Destroy()
@@ -104,9 +105,9 @@ local function createGui()
 
 	flyButton = Instance.new("TextButton", mainFrame)
 	flyButton.Text = "Toggle Fly"
-	flyButton.Size = UDim2.new(0.6,0,0,30)
+	flyButton.Size = UDim2.new(0.6,0,0,35)
 	flyButton.Position = UDim2.new(0.2,0,0.25,0)
-	flyButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	flyButton.BackgroundColor3 = Color3.fromRGB(40,40,50)
 	flyButton.TextColor3 = Color3.fromRGB(255,255,255)
 	flyButton.Font = Enum.Font.Gotham
 	flyButton.TextScaled = true
@@ -119,11 +120,11 @@ local function createGui()
 	plusButton.Text = "+"
 	plusButton.Size = UDim2.new(0.2,0,0,30)
 	plusButton.Position = UDim2.new(0.1,0,0.55,0)
-	plusButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	plusButton.BackgroundColor3 = Color3.fromRGB(40,40,50)
 	plusButton.TextColor3 = Color3.fromRGB(255,255,255)
 	plusButton.Font = Enum.Font.Gotham
 	plusButton.TextScaled = true
-	Instance.new("UICorner", plusButton).CornerRadius = UDim.new(0,8)
+	Instance.new("UICorner", plusButton).CornerRadius = UDim.new(0,6)
 	plusButton.MouseButton1Click:Connect(function()
 		flySpeed = math.min(flySpeed + speedIncrement, maxSpeed)
 		speedLabel.Text = "Speed: "..flySpeed
@@ -133,11 +134,11 @@ local function createGui()
 	minusButton.Text = "-"
 	minusButton.Size = UDim2.new(0.2,0,0,30)
 	minusButton.Position = UDim2.new(0.7,0,0.55,0)
-	minusButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	minusButton.BackgroundColor3 = Color3.fromRGB(40,40,50)
 	minusButton.TextColor3 = Color3.fromRGB(255,255,255)
 	minusButton.Font = Enum.Font.Gotham
 	minusButton.TextScaled = true
-	Instance.new("UICorner", minusButton).CornerRadius = UDim.new(0,8)
+	Instance.new("UICorner", minusButton).CornerRadius = UDim.new(0,6)
 	minusButton.MouseButton1Click:Connect(function()
 		flySpeed = math.max(flySpeed - speedIncrement, minSpeed)
 		speedLabel.Text = "Speed: "..flySpeed
@@ -148,7 +149,7 @@ local function createGui()
 	speedLabel.Size = UDim2.new(1,0,0,20)
 	speedLabel.Position = UDim2.new(0,0,0.85,0)
 	speedLabel.BackgroundTransparency = 1
-	speedLabel.TextColor3 = Color3.fromRGB(255,255,255)
+	speedLabel.TextColor3 = Color3.fromRGB(230,230,230)
 	speedLabel.TextScaled = true
 	speedLabel.Font = Enum.Font.GothamBold
 end
