@@ -55,6 +55,47 @@ local function startFly()
 	flying = true
 end
 
+local function makeDraggable(frame)
+	local dragging = false
+	local dragInput, mousePos, framePos
+
+	local function update(input)
+		local delta = input.Position - mousePos
+		frame.Position = UDim2.new(
+			framePos.X.Scale,
+			framePos.X.Offset + delta.X,
+			framePos.Y.Scale,
+			framePos.Y.Offset + delta.Y
+		)
+	end
+
+	frame.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			mousePos = input.Position
+			framePos = frame.Position
+
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+
+	frame.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			dragInput = input
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
+end
+
 local function createGui()
 	if screenGui then screenGui:Destroy() end
 
@@ -69,8 +110,7 @@ local function createGui()
 	mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 	mainFrame.BackgroundColor3 = Color3.fromRGB(20,20,25)
 	mainFrame.BorderSizePixel = 0
-	local uiCorner = Instance.new("UICorner", mainFrame)
-	uiCorner.CornerRadius = UDim.new(0,12)
+	Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0,12)
 
 	local gradient = Instance.new("UIGradient", mainFrame)
 	gradient.Color = ColorSequence.new({
@@ -152,6 +192,8 @@ local function createGui()
 	speedLabel.TextColor3 = Color3.fromRGB(230,230,230)
 	speedLabel.TextScaled = true
 	speedLabel.Font = Enum.Font.GothamBold
+
+	makeDraggable(mainFrame)
 end
 
 RunService.RenderStepped:Connect(function()
