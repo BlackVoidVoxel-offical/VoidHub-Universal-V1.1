@@ -11,6 +11,7 @@ local minSpeed = 50
 local maxSpeed = 1000
 local bodyGyro
 local bodyVelocity
+local renderConnection
 
 local screenGui
 local mainFrame
@@ -19,6 +20,7 @@ local plusButton
 local minusButton
 local speedLabel
 local closeButton
+local title
 
 local Colors = {
 	Color3.fromRGB(147, 255, 239),
@@ -33,8 +35,8 @@ local function stopFly()
 	local humanoid = char:FindFirstChildWhichIsA("Humanoid")
 	if not hrp or not humanoid then return end
 	humanoid.PlatformStand = false
-	if bodyGyro then bodyGyro:Destroy() end
-	if bodyVelocity then bodyVelocity:Destroy() end
+	if bodyGyro then bodyGyro:Destroy() bodyGyro = nil end
+	if bodyVelocity then bodyVelocity:Destroy() bodyVelocity = nil end
 	flying = false
 end
 
@@ -55,7 +57,8 @@ local function startFly()
 	flying = true
 end
 
-local function makeDraggable(frame)
+
+local function makeDraggable(frame, dragHandle)
 	local dragging = false
 	local dragInput, mousePos, framePos
 
@@ -69,7 +72,7 @@ local function makeDraggable(frame)
 		)
 	end
 
-	frame.InputBegan:Connect(function(input)
+	dragHandle.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			dragging = true
 			mousePos = input.Position
@@ -83,7 +86,7 @@ local function makeDraggable(frame)
 		end
 	end)
 
-	frame.InputChanged:Connect(function(input)
+	dragHandle.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement then
 			dragInput = input
 		end
@@ -120,7 +123,7 @@ local function createGui()
 	})
 	gradient.Rotation = 45
 
-	local title = Instance.new("TextLabel", mainFrame)
+	title = Instance.new("TextLabel", mainFrame)
 	title.Text = "OP Fly"
 	title.Size = UDim2.new(1,0,0,30)
 	title.Position = UDim2.new(0,0,0,0)
@@ -139,7 +142,14 @@ local function createGui()
 	closeButton.TextScaled = true
 	Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0,6)
 	closeButton.MouseButton1Click:Connect(function()
+		
 		stopFly()
+		
+		if renderConnection then
+			renderConnection:Disconnect()
+			renderConnection = nil
+		end
+		
 		screenGui:Destroy()
 	end)
 
@@ -193,10 +203,10 @@ local function createGui()
 	speedLabel.TextScaled = true
 	speedLabel.Font = Enum.Font.GothamBold
 
-	makeDraggable(mainFrame)
+	makeDraggable(mainFrame, title)
 end
 
-RunService.RenderStepped:Connect(function()
+renderConnection = RunService.RenderStepped:Connect(function()
 	if flying then
 		local char = LocalPlayer.Character
 		if not char then return end
@@ -216,7 +226,9 @@ RunService.RenderStepped:Connect(function()
 		else
 			bodyVelocity.Velocity = Vector3.new(0,0,0)
 		end
-		bodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + Camera.CFrame.LookVector)
+		if bodyGyro then
+			bodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + Camera.CFrame.LookVector)
+		end
 	end
 end)
 
